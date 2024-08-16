@@ -30,6 +30,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: upload
+          path: ${{ github.workspace }}/upload/verademo.war
 
   sast_branch_scan:
     runs-on: ubuntu-latest
