@@ -30,7 +30,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: upload
-          path: ${{ github.workspace }}/upload/verademo.war
+          path: ${{ github.workspace }}/artifact/verademo.war
 
   sast_branch_scan:
     runs-on: ubuntu-latest
@@ -55,7 +55,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
-          name: 'upload'
+          name: upload
 
       - name: Pipeline Scan
         run: |
