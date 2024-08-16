@@ -18,13 +18,6 @@ jobs:
           ./veracode package --source . --type directory --output ${{ github.workspace }}/artifact --trust
           ls -l ${{ github.workspace }}/artifact
 
-      - name: Configure Veracode CLI
-        run: |
-          ./veracode configure
-        env:
-          VERACODE_API_KEY_ID: ${{ secrets.VERACODE_ID }}
-          VERACODE_API_KEY_SECRET: ${{ secrets.VERACODE_KEY }}
-
       - name: Run Veracode Package
         run: |
           ./veracode package --source . --type directory --output ${{ github.workspace }}/artifact --trust
