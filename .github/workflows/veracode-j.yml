@@ -15,6 +15,14 @@ jobs:
       - name: Install Veracode CLI
         run: |
           curl -fsS https://tools.veracode.com/veracode-cli/install | sh
+          ls -l
+          which veracode
+        env:
+          VERACODE_API_KEY_ID: ${{ secrets.VERACODE_ID }}
+          VERACODE_API_KEY_SECRET: ${{ secrets.VERACODE_KEY }}
+
+      - name: Run Veracode Package
+        run: |
           ./veracode package --source . --type directory --output ${{ github.workspace }}/artifact --trust
           ls -l ${{ github.workspace }}/artifact
         env:
@@ -36,7 +44,12 @@ jobs:
         with:
           name: upload
 
-      - name: Veracode SAST - Branch Scan
+      - name: Verify Veracode CLI
+        run: |
+          ls -l ./veracode
+          which veracode
+
+      - name: Run Veracode SAST - Branch Scan
         run: |
           ./veracode scan --source ${{ github.workspace }}/verademo.war --type directory --output ${{ github.workspace }}/sast --trust
         env:
@@ -52,7 +65,12 @@ jobs:
         with:
           name: upload
 
-      - name: Veracode SAST - Compliance Scan
+      - name: Verify Veracode CLI
+        run: |
+          ls -l ./veracode
+          which veracode
+
+      - name: Run Veracode SAST - Compliance Scan
         run: |
           ./veracode scan --source ${{ github.workspace }}/verademo.war --type directory --output ${{ github.workspace }}/sast --trust
 
