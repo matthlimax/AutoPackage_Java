@@ -53,7 +53,7 @@ jobs:
           VERACODE_API_KEY_ID: ${{ secrets.VERACODE_ID }}
           VERACODE_API_KEY_SECRET: ${{ secrets.VERACODE_KEY }}
 
-  sast_quick_and_compliance_scan:
+  sast_Pipeline:
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -62,20 +62,11 @@ jobs:
         with:
           name: upload
 
-      - name: Verify Veracode CLI
-        run: |
-          ls -l ./veracode
-          which veracode
-
-      - name: Run Veracode SAST - Compliance Scan
-        run: |
-          ./veracode scan --source ${{ github.workspace }}/verademo.war --type directory --output ${{ github.workspace }}/sast --trust
-
-      - name: Quick Scan
+      - name: Pipeline Scan
         run: |
           curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
           unzip -o pipeline-scan-LATEST.zip
-          java -jar pipeline-scan.jar -vid ${{ secrets.VERACODE_ID }} -vkey ${{ secrets.VERACODE_KEY }} -f ${{ github.workspace }}/verademo.war --issue_details true -pn "Veracode Recommended Medium" || true
+          java -jar pipeline-scan.jar -vid ${{ secrets.VERACODE_ID }} -vkey ${{ secrets.VERACODE_KEY }} -f ${{ github.workspace }}/upload/verademo.war --issue_details true -pn "Veracode Recommended Medium" || true
 
   container_build_and_scan:
     runs-on: ubuntu-latest
