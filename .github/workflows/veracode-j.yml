@@ -15,8 +15,8 @@ jobs:
       - name: Install Veracode CLI
         run: |
           curl -fsS https://tools.veracode.com/veracode-cli/install | sh
-          ls -l
-          which veracode
+          ./veracode package --source . --type directory --output ${{ github.workspace }}/artifact --trust
+          ls -l ${{ github.workspace }}/artifact
 
       - name: Configure Veracode CLI
         run: |
