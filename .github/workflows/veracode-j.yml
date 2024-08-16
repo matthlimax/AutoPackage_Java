@@ -32,27 +32,11 @@ jobs:
           name: verademo.war
           path: target/verademo.war
 
-  sast_branch_scan:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: verademo.war
-          path: target/verademo.war
-
-      - name: Run Veracode SAST - Branch Scan
-        run: |
-          ./veracode scan --source ${{ github.workspace }}/verademo.war --type directory --output ${{ github.workspace }}/sast --trust
-        env:
-          VERACODE_API_KEY_ID: ${{ secrets.VERACODE_ID }}
-          VERACODE_API_KEY_SECRET: ${{ secrets.VERACODE_KEY }}
 
   Veracode_Policy_Scan:
     name: Veracode Policy Scan
     runs-on: ubuntu-latest
-    needs: [sast_branch_scan] # executa apenas após o job do build concluir
+    needs: [build] # executa apenas após o job do build concluir
     steps:
       - uses: actions/checkout@v2
       - name: Remove existing file
