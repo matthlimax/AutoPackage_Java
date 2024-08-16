@@ -29,8 +29,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: upload
-          path: ${{ github.workspace }}/artifact/verademo.war
+          name: verademo.war
+          path: target/verademo.war
 
   sast_branch_scan:
     runs-on: ubuntu-latest
@@ -39,7 +39,8 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
-          name: upload
+          name: verademo.war
+          path: target/verademo.war
 
       - name: Run Veracode SAST - Branch Scan
         run: |
@@ -61,7 +62,7 @@ jobs:
         run: |
           curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
           unzip -o pipeline-scan-LATEST.zip
-          java -jar pipeline-scan.jar -vid ${{ secrets.VERACODE_ID }} -vkey ${{ secrets.VERACODE_KEY }} -f ${{ github.workspace }}/upload/AutoPackage_Java --issue_details true -pn "Veracode Recommended Medium" || true
+          java -jar pipeline-scan.jar -vid ${{ secrets.VERACODE_ID }} -vkey ${{ secrets.VERACODE_KEY }} -f v${{ github.workspace }}target/verademo.war --issue_details true -pn "Veracode Recommended Medium" || true
 
   container_build_and_scan:
     runs-on: ubuntu-latest
