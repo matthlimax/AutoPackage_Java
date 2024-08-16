@@ -9,6 +9,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Install Veracode CLI
         run: |
           curl -fsS https://tools.veracode.com/veracode-cli/install | sh
@@ -35,7 +38,7 @@ jobs:
 
       - name: Veracode SAST - Branch Scan
         run: |
-          ./veracode scan --source ${{ github.workspace }}/artifact/verademo.war --type directory --output ${{ github.workspace }}/sast --trust
+          ./veracode scan --source ${{ github.workspace }}/verademo.war --type directory --output ${{ github.workspace }}/sast --trust
         env:
           VERACODE_API_KEY_ID: ${{ secrets.VERACODE_ID }}
           VERACODE_API_KEY_SECRET: ${{ secrets.VERACODE_KEY }}
@@ -51,13 +54,13 @@ jobs:
 
       - name: Veracode SAST - Compliance Scan
         run: |
-          ./veracode scan --source ${{ github.workspace }}/artifact/verademo.war --type directory --output ${{ github.workspace }}/sast --trust
+          ./veracode scan --source ${{ github.workspace }}/verademo.war --type directory --output ${{ github.workspace }}/sast --trust
 
       - name: Quick Scan
         run: |
           curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
           unzip -o pipeline-scan-LATEST.zip
-          java -jar pipeline-scan.jar -vid ${{ secrets.VERACODE_ID }} -vkey ${{ secrets.VERACODE_KEY }} -f ${{ github.workspace }}/artifact/verademo.war --issue_details true -pn "Veracode Recommended Medium" || true
+          java -jar pipeline-scan.jar -vid ${{ secrets.VERACODE_ID }} -vkey ${{ secrets.VERACODE_KEY }} -f ${{ github.workspace }}/verademo.war --issue_details true -pn "Veracode Recommended Medium" || true
 
   container_build_and_scan:
     runs-on: ubuntu-latest
